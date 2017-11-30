@@ -9,6 +9,9 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const Handlebars = require('handlebars');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({dest: 'uploaded/'});
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
     // If the user posts to the server with a property called _method, rewrite the request's method
@@ -49,22 +52,18 @@ app.use(rewriteUnsupportedBrowserMethods);
 app.use(cookieParser());
 app.use(session({secret:"somekeu", resave:true, saveUninitialized:true}));
 app.use(flash());
-app.use(session({
-    cookie: { maxAge: 30000000 },
-    secret: 'woot',
-    resave: false,
-    saveUninitialized: false
-}));
 app.use(passport.initialize());
 app.use(passport.session()); 
+
 app.get('/', function(req, res){
-    if(req.isAuthenticated()){
-        res.render('users/users_home', {user: req.user});
-    }else {
+    //var sessionData = req.session;
+    if(isLoggedIn){
+        res.render('users/users_home', {user: req.user});    
+    } else {
         var messages = req.flash('error');
-        res.render('categories/home', { messages: messages, hasErrors: messages.length > 0 });
+        res.render('categories/home', { messages: messages, hasErrors: messages.length > 0 });    
     }
-    ///res.render('categories/home');
+    
 });
 
 app.use(function(req,res,next){
@@ -73,7 +72,22 @@ app.use(function(req,res,next){
     next();
 });
 
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
+
+function notLoggedIn(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
+
 configRoutes(app);
+
 console.log("  ______    __                                                         ______                            ");
 console.log(" /      \\  /  |                                                       /      \\                           ");
 console.log("/$$$$$$  |_$$ |_     ______   __     __  ______   _______    _______ /$$$$$$  |  ______    ______        ");

@@ -5,7 +5,7 @@
       <!-- Latest compiled and minified CSS -->
       <link rel="stylesheet" type="text/css" href="../style.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-      <script src="https://use.fontawesome.com/0202973e4e.js"></script>
+      <!--<script src="https://use.fontawesome.com/0202973e4e.js"></script>-->
      
     </head>
 
@@ -22,11 +22,17 @@
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Events</a>
       </li>
-      
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="#">Departments</a>
+      </li>
+      <li class="nav-item">
+        {{# if login}}
+         <a class="nav-link" href="#">Tickets</a>
+        {{ else }}
+           <a class="nav-link" href="#">Shows</a>
+        {{/if}}
       </li>
     </ul>
     <div class="btn-group">
@@ -34,7 +40,6 @@
     User Managment
   </button>
   <div class="dropdown-menu dropdown-menu-right">
-    {{ Login }}
     {{# if login}}
     <button class="dropdown-item" type="button" onclick="location.href='/user/profile';">User Account</button>
     <div class="divider"></div>

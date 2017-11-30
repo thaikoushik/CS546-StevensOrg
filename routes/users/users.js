@@ -17,6 +17,11 @@ passport.deserializeUser(async function(user, done) {
     }
 });
 
+// TODO: Move the new user object creation in SignUp to UserData.CreateUser Method 
+
+/*
+    All User routes User Authentication and signup. By defualt there is no registration page for admins. 
+*/
 passport.use('local.login', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
@@ -38,14 +43,19 @@ passport.use('local.login', new LocalStrategy({
         return done(null, false, { "message": e });
     }
 }));
+
+/*
+    User Signup Every user is registered as student. It can be changed in DB
+*/
 passport.use('local.signup', new LocalStrategy({
-    usernameField: 'username',
+    usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
 }, async function(req, username, password, done) {
     try{
+        console.log("asdfdsfads");
         const user = await userData.findUserByUsername(username);
-        if(!user){
+        if(!user || user===null|| user === undefined){
             if(!username) throw "Provide Email - It will be your user name";
             if(!password) throw "Provide password";
             if(req.body.firstName) throw "Provide First Name";
@@ -53,7 +63,7 @@ passport.use('local.signup', new LocalStrategy({
             if(req.body.address) throw "Provide address, tickets will be sent to the address";
             if(req.body.phone) throw "Provide Phone Number to recieve the tickets";
             if(req.body.department) throw "Provide Department to optimize the search";
-            var userSession = req.session;
+           // var userSession = req.session;
             var newUser = {
                 _id: uuid.v4(),
                 firstname: req.body.firstname,
@@ -63,12 +73,14 @@ passport.use('local.signup', new LocalStrategy({
                 //sessionObject: userSession,
                 address: req.body.address,
                 phone:req.body.phone,
+                role:"Student",
                 department: req.body.department
             };
             const newUserCreated = await userData.createUser(newUser);
             const insertedUser =  await userData.findUserById(newUserCreated.insertedId);
             return done(null,insertedUser);    
         } else {
+            console.log("cchck");
             messages.push("Username already exists try different one.");
             //throw "Username already exists try different one."
         }
@@ -126,7 +138,14 @@ router.post('/signup', passport.authenticate('local.signup', {
 
 
 router.get('/private', isLoggedIn, (req, res) => {
-    res.render('users/users_home', { user: req.user });
+    var role = req.user.role;
+    if(role === "Student"){
+        res.render('users/users_home', { user: req.user });    
+    } else {
+        res.redirect('/admin');//, {user: req.user});
+        //res.render('users/admin_home', {user: req.user});
+    }
+    
 });
 
 router.get('/', (req, res) => {
@@ -138,6 +157,10 @@ router.get('/', (req, res) => {
     }
 });
 
+
+/*
+    Admin Pages are done in admin.js 
+*/
 
 router.get('/logout', isLoggedIn, function(req, res) {
     req.logout();

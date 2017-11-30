@@ -8,41 +8,48 @@
                 {{/each}}
             </div>
         {{/if}}
-        <form action="/user/signup" method="post">
-            <label class="nav-link disabled">*All fields are required</label>
+        <form id="contactForm" action="/user/signup" method="post" data-toggle="validator">
+        <label class="nav-link disabled">*All fields are required</label>
            <div class="form-group">
-                <lable for="email">E-mail (Username) </lable>
-                <input type="text" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  name="email" class="form-control" required>
+                <lable for="email">E-mail</lable>  <small id="emailHelp" class="form-text text-muted">Your email will be your usename</small>
+                <input type="text" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"  name="email" class="form-control" data-error="Bruh, that email address is invalid" required>
+                <div class="help-block with-errors"></div>
             </div>
             
             <div class="form-group">
                 <lable for="password">Password</lable>
-                <input type="password" id="password" name="password" data-minlength="6" maxlength="15" class="form-control" required>
+                <input type="password" id="password" name="password" data-minlength="6" maxlength="15" class="form-control">
                 <div class="help-block">Minimum of 6 characters</div>
+                <div class="col-xs-5 messageContainer"></div>
             </div>
 
             <div class="form-group">
                 <lable for="firstname">First Name</lable>
-                <input type="firstname" id="firstname" name="firstname" class="form-control" required>
+                <input type="firstname" id="firstname" name="firstname" class="form-control">
+                 <div class="col-xs-5 messageContainer"></div>
             </div>
 
             <div class="form-group">
                 <lable for="lastname">Last Name</lable>
-                <input type="lastname" id="lastname" name="lastname" class="form-control" required>
+                <input type="lastname" id="lastname" name="lastname" class="form-control">
+                 <div class="col-xs-5 messageContainer"></div>
             </div>
 
             <div class="form-group">
                 <lable for="address">Address</lable>
-                <input type="address" id="address" name="address" class="form-control" required>
+                <input type="address" id="address" name="address" class="form-control">
+                 <div class="col-xs-5 messageContainer"></div>
             </div>
 
             <div class="form-group">
                 <lable for="phone">Phone Number</lable>
-                <input type="phone" id="phone" name="phone" class="form-control" required>
+                <input type="phone" id="phone" name="phone" class="form-control">
+                 <div class="col-xs-5 messageContainer"></div>
             </div>
             <div class="form-group">
                 <lable for="department">Department</lable>
-                <input type="department" id="department" name="department" class="form-control" required>
+                <input type="department" id="department" name="department" class="form-control">
+                 <div class="col-xs-5 messageContainer"></div>
             </div>
 
            <!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}">-->

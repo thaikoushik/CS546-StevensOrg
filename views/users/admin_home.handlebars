@@ -1,0 +1,87 @@
+<!--
+
+{{# each productsList }}
+
+<div class="row">
+    {{# each this}}
+
+    <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+            <img src="{{ this.imagePath }}" class="img-responsive" alt="...">
+            <div class="caption">
+                <a href="/product-view/{{this._id}}" class=""><h3>{{ this.title }}</h3></a>
+                <p class="description">{{ this.description }}</p>
+                <div class="clearfix">
+                    <div class="price pull-left">${{ this.price }}</div>
+                    <a href="/add-to-cart/{{ this._id }}" class="btn btn-success pull-right" role="button">Add to Shopping Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+
+</div>
+
+{{/each}}-->
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1>This is home for admin</h1>
+       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventCreate"><i class="fa fa-search"></i> Create Event</button>
+        
+       
+           <!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}">-->
+     </div>
+</div>
+
+<div class="modal fade" id="eventCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="contactForm" action="/admin/createEvent" method="post" enctype="multipart/form-data" data-toggle="validator">
+        <label class="nav-link disabled">*All fields are required</label>
+           <div class="form-group">
+                <lable for="eventName">Event Name</lable>
+                <input type="text" id="eventName" name="eventName" class="form-control" data-error="Event Name is missing" required>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <lable for="organizerName">Organizer Name</lable>
+                <input type="text" id="organizerName" name="organizerName" class="form-control" data-error="Organizer is missing" required disabled>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <lable for="tickets">Tickets</lable>
+                <input type="text" id="tickets" name="tickets" class="form-control" data-error="Tickets is missing" required>
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <lable for="image">Image</lable>
+                <input type="file" id="image" name="image" class="form-control">
+                <div class="help-block with-errors"></div>
+            </div>
+
+            <div class="form-group">
+                <lable for="ticketPrice">Ticket Price</lable>
+                <input type="text" id="ticketPrice" name="ticketPrice" class="form-control" data-error="Ticket price is missing" required>
+                <div class="help-block with-errors"></div>
+            </div>
+             <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>

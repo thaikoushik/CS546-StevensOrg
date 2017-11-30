@@ -1,0 +1,25 @@
+THis is event detail page{{{event.imageURL}}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4 item-photo">
+            <img style="max-width:100%;" src="/{{ event.imageURL }}.jpg" />
+        </div>
+        <div class="col-xs-5" style="border:0px solid gray">
+            <!-- Datos del vendedor y titulo del producto -->
+            <h3>{{event.name}}</h3>    
+
+            <h3 style="margin-top:0px;">${{event.ticketPrice}}</h3>
+            <p>
+                {{event.description}}
+            </p>
+            <h5>{{event.department}}</h5>
+            <div class="section" style="padding-bottom:20px;">
+
+                <h6><a href="/register/{{ event._id }}" class="btn btn-success" role="button">Register</a></h6>
+            </div>                                        
+        </div>                              
+
+
+    </div>
+</div>
