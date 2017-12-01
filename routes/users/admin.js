@@ -15,7 +15,7 @@ var storage = multer.diskStorage({
 });
 
 router.get('/', (req, res) => {
-    res.render('users/admin_home');
+    res.render('users/admin_home', {user: req.user});
 });
 
 router.post('/createEvent', multer({ storage: storage }).single('image'), async(req, res) => {

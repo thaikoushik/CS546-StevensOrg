@@ -14,7 +14,12 @@ const exportedMethods = {
             const eventCollections = await events();
             let URLPath = newEvent.file.path;
             URLPath = URLPath.replace(/\\/g,"/");//  ("\\\\", "/");
-
+            console.log(newEvent.body);
+            const contactInfo = {
+                name: newEvent.body.contactName,
+                phone: newEvent.body.contactPhone,
+                email: newEvent.body.contactEmail
+            };
             const createNewEvent = {
                 _id: uuid.v4(),
                 name: newEvent.body.eventName,
@@ -22,6 +27,11 @@ const exportedMethods = {
                 department: newEvent.user.department,
                 tickets: newEvent.body.tickets,
                 ticketPrice: newEvent.body.ticketPrice,
+                eventDescription: newEvent.body.description,
+                location:newEvent.body.location,
+                availableTickets: newEvent.body.tickets,
+                eventDate: newEvent.body.eventDate,
+                contactInfo: contactInfo,
                 imageURL: URLPath,
             };
             const event = eventCollections.insertOne(createNewEvent);

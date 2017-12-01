@@ -1,75 +1,99 @@
 $(document).ready(function() {
-    $('#contactForm').formValidation({
-        framework: 'bootstrap',
-        err: {
-            container: function($field, validator) {
-                // Look at the markup
-                //  <div class="col-xs-4">
-                //      <field>
-                //  </div>
-                //  <div class="col-xs-5 messageContainer"></div>
-                return $field.parent().next('.messageContainer');
-            }
-        },
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            email: {
-                validators: {
-                    notEmpty: {
-                        message: 'The Email address is required and cannot be empty'
-                    },
-                    emailAddress: {
-                        message: 'The email address is not valid'
-                    }
-                }
-            },
-            password: {
-                validators: {
-                    notEmpty: {
-                        message: 'The Password is required and cannot be empty'
-                    }
-                }
-            },
-            firstName: {
-                validators: {
-                    notEmpty: {
-                        message: 'The First name is required and cannot be empty'
-                    }
-                }
-            },
-            lastName: {
-                validators: {
-                    notEmpty: {
-                        message: 'The Last name is required and cannot be empty'
-                    }
-                }
-            },
-            title: {
-                validators: {
-                    notEmpty: {
-                        message: 'The title is required and cannot be empty'
-                    },
-                    stringLength: {
-                        max: 100,
-                        message: 'The title must be less than 100 characters long'
-                    }
-                }
-            },
-            content: {
-                validators: {
-                    notEmpty: {
-                        message: 'The content is required and cannot be empty'
-                    },
-                    stringLength: {
-                        max: 500,
-                        message: 'The content must be less than 500 characters long'
-                    }
-                }
-            }
-        }
-    });
+    var dtToday = new Date();
+
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if (month < 10)
+        month = '0' + month.toString();
+    if (day < 10)
+        day = '0' + day.toString();
+
+    var maxDate = year + '-' + month + '-' + day;
+    // alert(maxDate);
+    $('#eventDate').attr('min', maxDate);
 });
+
+function initMap() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -33.8688, lng: 151.2195 },
+        zoom: 13
+    });
+    var card = document.getElementById('pac-card');
+    var input = document.getElementById('pac-input');
+    var types = document.getElementById('type-selector');
+    var strictBounds = document.getElementById('strict-bounds-selector');
+
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+
+    // Bind the map's bounds (viewport) property to the autocomplete object,
+    // so that the autocomplete requests use the current map bounds for the
+    // bounds option in the request.
+    autocomplete.bindTo('bounds', map);
+
+    var infowindow = new google.maps.InfoWindow();
+    var infowindowContent = document.getElementById('infowindow-content');
+    infowindow.setContent(infowindowContent);
+    var marker = new google.maps.Marker({
+        map: map,
+        anchorPoint: new google.maps.Point(0, -29)
+    });
+
+    autocomplete.addListener('place_changed', function() {
+        infowindow.close();
+        marker.setVisible(false);
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        }
+
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17); // Why 17? Because it looks good.
+        }
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+
+        var address = '';
+        if (place.address_components) {
+            address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        infowindowContent.children['place-icon'].src = place.icon;
+        infowindowContent.children['place-name'].textContent = place.name;
+        infowindowContent.children['place-address'].textContent = address;
+        infowindow.open(map, marker);
+    });
+
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    function setupClickListener(id, types) {
+        var radioButton = document.getElementById(id);
+        radioButton.addEventListener('click', function() {
+            autocomplete.setTypes(types);
+        });
+    }
+
+    setupClickListener('changetype-all', []);
+    setupClickListener('changetype-address', ['address']);
+    setupClickListener('changetype-establishment', ['establishment']);
+    setupClickListener('changetype-geocode', ['geocode']);
+
+    document.getElementById('use-strict-bounds')
+        .addEventListener('click', function() {
+            console.log('Checkbox clicked! New state=' + this.checked);
+            autocomplete.setOptions({ strictBounds: this.checked });
+        });
+}
