@@ -16,8 +16,7 @@ $(document).ready(function() {
 });
 
 function registerEvent(id){
-    console.log(id);
-    var eventId = id;
+   var eventId = id;
     $.ajax({
         type: "POST",
         url: '/event/registerEvent/'+eventId,

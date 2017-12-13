@@ -60,6 +60,10 @@
     height:300px;
 }
 
+.info-label{
+  color: #868e96;
+}
+
 p { word-break: break-all; }
 
 @media (max-width: 768px) {

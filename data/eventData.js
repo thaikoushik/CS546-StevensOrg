@@ -64,11 +64,9 @@ const exportedMethods = {
 
     async getAllEvents(){
         try{
-            console.log("herer too ");
             const eventCollections = await events();
             const eventsList = [];
             eventsList = await eventCollections.find({}).toArray();
-            console.log(eventsList);
             return eventsList;
         } catch(e){
             return e;
@@ -99,8 +97,7 @@ const exportedMethods = {
         } });
 
         const userDetails = await userData.findUserById(userId);
-        //req.app.user.events = eventsList;
-
+        
         return userDetails.events;
         } catch(e){
             return e;

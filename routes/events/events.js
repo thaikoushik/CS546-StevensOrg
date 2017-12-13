@@ -16,10 +16,6 @@ router.get('/eventdetail/:id', async (req, res) => {
 			console.log('safsdfds');
 			let eventsRegistered = req.user.events; 
 			for(let i=0;i<eventsRegistered.length;i++){
-				console.log(eventsRegistered[i].eventId);	
-			}
-			
-			for(let i=0;i<eventsRegistered.length;i++){
 				console.log('asdfasdsdfdfdvbv fdfv ');
 				if(eventsRegistered[i].eventId === id){
 					console.log("is it herere");
@@ -43,14 +39,8 @@ router.post('/registerEvent/:id', async(req,res) => {
 	try{
 		const eventsList = await eventData.registerForEvent(id, req.user._id);
 		req.user.events = eventsList;
-		console.log('------------------------------------------------');
 		let userObj = req.user;
 		let eventsLists = userObj.events; 
-		for(let i=0;i<eventsLists.length;i++){
-			console.log(eventsLists[i].eventId);	
-		}
-		
-
 		if(!event){
 			throw "There is no event created with this id";
 		}
