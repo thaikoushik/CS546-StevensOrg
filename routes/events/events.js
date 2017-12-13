@@ -13,12 +13,9 @@ router.get('/eventdetail/:id', async (req, res) => {
 		}
 		res.app.locals.isRegistered = false;
 		if(req.user !== undefined){
-			console.log('safsdfds');
 			let eventsRegistered = req.user.events; 
 			for(let i=0;i<eventsRegistered.length;i++){
-				console.log('asdfasdsdfdfdvbv fdfv ');
 				if(eventsRegistered[i].eventId === id){
-					console.log("is it herere");
 					res.app.locals.isRegistered = true;
 					break;
 				} 
@@ -35,7 +32,6 @@ router.get('/eventdetail/:id', async (req, res) => {
 
 router.post('/registerEvent/:id', async(req,res) => {
 	const id = req.params.id;
-	console.log(req.user);
 	try{
 		const eventsList = await eventData.registerForEvent(id, req.user._id);
 		req.user.events = eventsList;
