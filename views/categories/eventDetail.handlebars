@@ -17,8 +17,23 @@
                 <div class="info">
                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> <span class="title">Location:</span>  {{{event.location}}}     <br>                         
                     <span class="glyphicon glyphicon-gift"></span> <span class="title">Date:</span> {{{event.eventDate}}}                             
-                    <span class="glyphicon glyphicon-gift"></span> <span class="title">Department:</span> {{event.department}}                               
-                </div>                              
+                    <span class="glyphicon glyphicon-gift"></span> <span class="title">Department:</span> <p>{{event.department}}</p>                               
+                </div>              
+                <div>
+                    {{# if admin}}
+                    <div></div>
+                    {{ else }}
+
+                    <div class="section" style="padding-bottom:20px;">
+                        {{# if  isRegistered}}
+                           <input type="button" name="registerEvent" id="registrationDone" value="Registered" class="btn btn-primary" disabled>
+                         {{ else }}
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><input type="button" name="registerEvent" id="registerEvent" value="Register" class="btn btn-primary" onclick="registerEvent('{{ event._id }}');">
+                            
+                        {{/if}}
+                        </div>   
+                    {{/if}}
+                </div>                
             </div>
             <p>
                 {{{event.eventDescription}}}

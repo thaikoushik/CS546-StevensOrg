@@ -19,15 +19,11 @@ router.get('/', (req, res) => {
 });
 
 router.post('/createEvent', multer({ storage: storage }).single('image'), async(req, res) => {
-    //res.render('users/admin_home');
     console.log("came here");
-    console.log(req.file);
-    //console.log(req.files);
     try {
         const event = await eventData.createEvent(req);
         if(event){
             const newEvent = await eventData.getEventById(event.insertedId);
-            console.log(newEvent._id);
             res.redirect('/event/eventDetail/'+newEvent._id);
         }
         
@@ -37,3 +33,12 @@ router.post('/createEvent', multer({ storage: storage }).single('image'), async(
 });
 
 module.exports = router;
+
+
+
+let isLoggedIn = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}

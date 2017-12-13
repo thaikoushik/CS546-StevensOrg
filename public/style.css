@@ -60,6 +60,8 @@
     height:300px;
 }
 
+p { word-break: break-all; }
+
 @media (max-width: 768px) {
   .btn-responsive {
     padding:2px 4px;

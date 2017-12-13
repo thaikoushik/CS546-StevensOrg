@@ -1,4 +1,5 @@
 const mongoCollections = require("../config/mongoCollections");
+const userData = require("./userData");
 const path = require('path');
 const fs = require('fs');
 const users = mongoCollections.users;
@@ -13,13 +14,18 @@ const exportedMethods = {
             //const userCollections = await users();
             const eventCollections = await events();
             let URLPath = newEvent.file.path;
-            URLPath = URLPath.replace(/\\/g,"/");//  ("\\\\", "/");
-            console.log(newEvent.body);
+            URLPath = URLPath.replace(/\\/g,"/");
             const contactInfo = {
                 name: newEvent.body.contactName,
                 phone: newEvent.body.contactPhone,
                 email: newEvent.body.contactEmail
             };
+            let rsvp = false;
+            let restrictDeparment = false;
+
+            if(newEvent.body.rsvp == 'yes'){rsvp= true;}
+            if(newEvent.body.departmentRestriction == 'yes') {restrictDeparment = true;}
+ 
             const createNewEvent = {
                 _id: uuid.v4(),
                 name: newEvent.body.eventName,
@@ -33,8 +39,11 @@ const exportedMethods = {
                 eventDate: newEvent.body.eventDate,
                 contactInfo: contactInfo,
                 imageURL: URLPath,
+                RSVP: rsvp,
+                restrictDeparment: restrictDeparment
             };
-            const event = eventCollections.insertOne(createNewEvent);
+
+            const event = await eventCollections.insertOne(createNewEvent);
             return event;
         } catch (e) {
             return e;
@@ -51,7 +60,54 @@ const exportedMethods = {
         } catch(e){
             return e;
         }
-    }
+    },
+
+    async getAllEvents(){
+        try{
+            console.log("herer too ");
+            const eventCollections = await events();
+            const eventsList = [];
+            eventsList = await eventCollections.find({}).toArray();
+            console.log(eventsList);
+            return eventsList;
+        } catch(e){
+            return e;
+        }
+    },
+
+    async registerForEvent(id, userId){
+        try{
+            const userCollections = await users();
+            const eventDetails = await this.getEventById(id);
+            const organizerDetails = await userData.findUserById(eventDetails.organizerId);
+            const organizerName = organizerDetails.firstname + " " + organizerDetails.lastname;
+            const eventRegistered = {
+                _id:  uuid.v4(),
+                eventId: eventDetails._id,
+                eventName: eventDetails.name,
+                eventOrganizer: organizerName,
+                department: eventDetails.department,ticketPrice: eventDetails.ticketPrice,
+                description: eventDetails.eventDescription,
+                location: eventDetails.location,
+                eventDate: eventDetails.eventDate,
+                contactInfo: eventDetails.contactInfo,
+                restrictDepartment: eventDetails.restrictDepartment
+
+            };
+        await userCollections.update({_id: userId}, { $addToSet: {
+            events:eventRegistered
+        } });
+
+        const userDetails = await userData.findUserById(userId);
+        //req.app.user.events = eventsList;
+
+        return userDetails.events;
+        } catch(e){
+            return e;
+        }
+    },
+
+
 }
 
 

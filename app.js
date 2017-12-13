@@ -57,8 +57,13 @@ app.use(passport.session());
 
 app.get('/', function(req, res){
     //var sessionData = req.session;
-    if(isLoggedIn){
-        res.render('users/users_home', {user: req.user});    
+    if(isLoggedIn && req.user){
+         res.locals.login = req.isAuthenticated();
+        if(req.user.role === 'admin'){
+            res.render('users/admin_home', {user: req.user});    
+        } else {
+            res.render('users/users_home', {user: req.user});        
+        }    
     } else {
         var messages = req.flash('error');
         res.render('categories/home', { messages: messages, hasErrors: messages.length > 0 });    
@@ -68,6 +73,13 @@ app.get('/', function(req, res){
 
 app.use(function(req,res,next){
     res.locals.login = req.isAuthenticated();
+    if(req.isAuthenticated()){
+        if(req.user.role === 'admin'){
+            res.locals.admin = true;
+        } else {
+            res.locals.admin = false;
+        }
+    }
     res.locals.session = req.session;
     next();
 });

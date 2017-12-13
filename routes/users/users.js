@@ -5,6 +5,7 @@ const userData = require("../../data/userData");
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt-nodejs');
 const uuid = require("node-uuid");
+const eventData = require('../../data/eventData');
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -28,7 +29,6 @@ passport.use('local.login', new LocalStrategy({
     passReqToCallback: true
 }, async function(req, username, password, done) {
     try {
-        console.log("here");
         const user = await userData.findUserByUsername(username);
         bcrypt.compare(password, user.password, (error, isValid) => {
             if (error) {
@@ -53,17 +53,18 @@ passport.use('local.signup', new LocalStrategy({
     passReqToCallback: true
 }, async function(req, username, password, done) {
     try{
-        console.log("asdfdsfads");
         const user = await userData.findUserByUsername(username);
         if(!user || user===null|| user === undefined){
-            if(!username) throw "Provide Email - It will be your user name";
-            if(!password) throw "Provide password";
-            if(req.body.firstName) throw "Provide First Name";
-            if(req.body.lastName) throw "Provide Last Name";
-            if(req.body.address) throw "Provide address, tickets will be sent to the address";
-            if(req.body.phone) throw "Provide Phone Number to recieve the tickets";
-            if(req.body.department) throw "Provide Department to optimize the search";
+            console.log("herereererere");
+            if(!req.body.firstname) throw "Provide Email - It will be your user name";
+            if(!req.body.lastname) throw "Provide password";
+            if(!req.body.firstname) throw "Provide First Name";
+            if(!req.body.lastname) throw "Provide Last Name";
+            if(!req.body.address) throw "Provide address, tickets will be sent to the address";
+            if(!req.body.phone) throw "Provide Phone Number to recieve the tickets";
+            if(!req.body.department) throw "Provide Department to optimize the search";
            // var userSession = req.session;
+           let eventsRegistered = [];
             var newUser = {
                 _id: uuid.v4(),
                 firstname: req.body.firstname,
@@ -74,7 +75,8 @@ passport.use('local.signup', new LocalStrategy({
                 address: req.body.address,
                 phone:req.body.phone,
                 role:"Student",
-                department: req.body.department
+                department: req.body.department,
+                events: eventsRegistered
             };
             const newUserCreated = await userData.createUser(newUser);
             const insertedUser =  await userData.findUserById(newUserCreated.insertedId);
@@ -137,10 +139,17 @@ router.post('/signup', passport.authenticate('local.signup', {
 });
 
 
-router.get('/private', isLoggedIn, (req, res) => {
+router.get('/private', isLoggedIn, async (req, res) => {
     var role = req.user.role;
+    let eventsList = [];
+    let events = await eventData.getAllEvents();
+    let chunksize = 3;
+    for(let i=0;i<events.length;i+=chunksize){
+        eventsList.push(events.slice(i,i+chunknsize));
+    }
+    console.log(eventsList);
     if(role === "Student"){
-        res.render('users/users_home', { user: req.user });    
+        res.render('users/users_home', { user: req.user, eventsList: eventsList });    
     } else {
         res.redirect('/admin');//, {user: req.user});
         //res.render('users/admin_home', {user: req.user});

@@ -9,7 +9,7 @@ const exportedMethods = {
         try {
             if (!newUser) throw "User object is empty";
             const userCollections = await users();
-            const user = userCollections.insertOne(newUser);
+            const user = await userCollections.insertOne(newUser);
             //if (!user) throw "No user found";
             return user;
         } catch (e) {
@@ -40,6 +40,7 @@ const exportedMethods = {
             return e;
         }
     },
+
 }
 
 

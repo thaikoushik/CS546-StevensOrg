@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-</head>
-<body>
-	this is home page for students
+this is home page for studentsaa
 	{{ user.username }}
-</body>
-</html>
+
+
+{{# each eventsList }}
+
+<div class="row">
+    {{# each this}}
+
+    <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+            <img src="{{ this.imagePath }}" class="img-responsive" alt="...">
+            <div class="caption">
+                <a href="/product-view/{{this._id}}" class=""><h3>{{ this.eventName }}</h3></a>
+                <!--<p class="description">{{ this.description }}</p>-->
+                <div class="clearfix">
+                    <div class="price pull-left">${{ this.price }}</div>
+                    <a href="/register/{{ this._id }}" class="btn btn-success pull-right" role="button">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+
+</div>
+
+{{/each}}
+
