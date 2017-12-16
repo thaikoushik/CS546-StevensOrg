@@ -14,7 +14,7 @@ const exportedMethods = {
             //const userCollections = await users();
             const eventCollections = await events();
             let URLPath = newEvent.file.path;
-            URLPath = URLPath.replace(/\\/g,"/");
+            URLPath = URLPath.replace(/\\/g, "/");
             const contactInfo = {
                 name: newEvent.body.contactName,
                 phone: newEvent.body.contactPhone,
@@ -23,9 +23,9 @@ const exportedMethods = {
             let rsvp = false;
             let restrictDeparment = false;
 
-            if(newEvent.body.rsvp == 'yes'){rsvp= true;}
-            if(newEvent.body.departmentRestriction == 'yes') {restrictDeparment = true;}
- 
+            if (newEvent.body.rsvp == 'yes') { rsvp = true; }
+            if (newEvent.body.departmentRestriction == 'yes') { restrictDeparment = true; }
+
             const createNewEvent = {
                 _id: uuid.v4(),
                 name: newEvent.body.eventName,
@@ -34,7 +34,7 @@ const exportedMethods = {
                 tickets: newEvent.body.tickets,
                 ticketPrice: newEvent.body.ticketPrice,
                 eventDescription: newEvent.body.description,
-                location:newEvent.body.location,
+                location: newEvent.body.location,
                 availableTickets: newEvent.body.tickets,
                 eventDate: newEvent.body.eventDate,
                 contactInfo: contactInfo,
@@ -50,59 +50,108 @@ const exportedMethods = {
         }
     },
 
-    async getEventById(id){
-        try{
-            if(!id) throw "No Id is provided";
+    async getEventById(id) {
+        try {
+            if (!id) throw "No Id is provided";
             const eventCollections = await events();
-            const event = await eventCollections.findOne({_id: id});
+            const event = await eventCollections.findOne({ _id: id });
             return event;
 
-        } catch(e){
+        } catch (e) {
             return e;
         }
     },
 
-    async getAllEvents(){
-        try{
+    async getAllEvents() {
+        try {
             const eventCollections = await events();
             const eventsList = [];
             eventsList = await eventCollections.find({}).toArray();
             return eventsList;
-        } catch(e){
+        } catch (e) {
             return e;
         }
     },
 
-    async registerForEvent(id, userId){
-        try{
+    async registerForEvent(id, userId, tr_id) {
+        try {
+            console.log("eventDat78");
             const userCollections = await users();
             const eventDetails = await this.getEventById(id);
             const organizerDetails = await userData.findUserById(eventDetails.organizerId);
             const organizerName = organizerDetails.firstname + " " + organizerDetails.lastname;
-            const eventRegistered = {
-                _id:  uuid.v4(),
-                eventId: eventDetails._id,
-                eventName: eventDetails.name,
-                eventOrganizer: organizerName,
-                department: eventDetails.department,ticketPrice: eventDetails.ticketPrice,
-                description: eventDetails.eventDescription,
-                location: eventDetails.location,
-                eventDate: eventDetails.eventDate,
-                contactInfo: eventDetails.contactInfo,
-                restrictDepartment: eventDetails.restrictDepartment
-
+            const paymentDetails = {
+                transactionId: tr_id,
+                amountPaid: eventDetails.ticketPrice,
+                datePaid: new Date()
             };
-        await userCollections.update({_id: userId}, { $addToSet: {
-            events:eventRegistered
-        } });
 
-        const userDetails = await userData.findUserById(userId);
-        
-        return userDetails.events;
-        } catch(e){
+            if (eventDetails.tickets > 0 && eventDetails.availableTickets <=0) {
+                throw "No Tickets available";
+            }
+            
+            const eventRegistered = {
+                    _id: uuid.v4(),
+                    eventId: eventDetails._id,
+                    eventName: eventDetails.name,
+                    eventOrganizer: organizerName,
+                    department: eventDetails.department,
+                    ticketPrice: eventDetails.ticketPrice,
+                    description: eventDetails.eventDescription,
+                    location: eventDetails.location,
+                    eventDate: eventDetails.eventDate,
+                    contactInfo: eventDetails.contactInfo,
+                    restrictDepartment: eventDetails.restrictDepartment,
+                    paymentInfo: paymentDetails
+               };
+
+            if(eventDetails.tickets>0){
+                eventRegistered.availableTickets =  eventDetails.availableTickets-1;
+            }
+
+            console.log("eventDat78");
+            await userCollections.update({ _id: userId }, {
+                $addToSet: {
+                    events: eventRegistered
+                }
+            });
+
+            const userDetails = await userData.findUserById(userId);
+
+            return userDetails.events;
+        } catch (e) {
+            return e;
+            console.log(e);
+        }
+    },
+
+    async getAllCreatedEvents(id) {
+        try {
+            if (!id) {
+                throw "provide id";
+            }
+            const eventCollections = await events();
+            const eventsCreated = await eventCollections.find({ 'organizerId': id }).toArray();
+            return eventsCreated;
+
+        } catch (e) {
             return e;
         }
     },
+
+    async getRegisteredUsers(id) {
+        try {
+            if (!id) {
+                throw "No id Provided";
+            }
+            const userCollections = await users();
+            const registeredUsers = await userCollections.find({ "events": { $elemMatch: { eventId: "e3079314-e7a8-4f8a-8247-535d98cec627" } } }).toArray();
+            return registeredUsers;
+        } catch (e) {
+            return e;
+        }
+
+    }
 
 
 }

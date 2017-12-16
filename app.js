@@ -57,10 +57,11 @@ app.use(passport.session());
 
 app.get('/', function(req, res){
     //var sessionData = req.session;
-    if(isLoggedIn && req.user){
+    if(req.isAuthenticated()){
          res.locals.login = req.isAuthenticated();
-        if(req.user.role === 'admin'){
-            res.render('users/admin_home', {user: req.user});    
+        if(req.user.role === 'admin' || req.user.role === 'Admin'){
+            //res.render('users/admin_home', {user: req.user});    
+            res.redirect('/admin');
         } else {
             res.render('users/users_home', {user: req.user});        
         }    

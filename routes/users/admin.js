@@ -14,19 +14,31 @@ var storage = multer.diskStorage({
     }
 });
 
-router.get('/', (req, res) => {
-    res.render('users/admin_home', {user: req.user});
+router.get('/', async(req, res) => {
+    //const createdEvents = [];
+
+    if (!req.isAuthenticated()) {
+        res.redirect('/user/login');
+
+    }
+    const createdEvents = await eventData.getAllCreatedEvents(req.user._id);
+    var eventsList = [];
+    var chunkSize = 3;
+    for (var i = 0; i < createdEvents.length; i += chunkSize) {
+        eventsList.push(createdEvents.slice(i, i + chunkSize));
+    }
+    res.render('users/admin_home', { user: req.user, createdEvents: eventsList });
+
 });
 
 router.post('/createEvent', multer({ storage: storage }).single('image'), async(req, res) => {
-    console.log("came here");
     try {
         const event = await eventData.createEvent(req);
-        if(event){
+        if (event) {
             const newEvent = await eventData.getEventById(event.insertedId);
-            res.redirect('/event/eventDetail/'+newEvent._id);
+            res.redirect('/event/eventDetail/' + newEvent._id);
         }
-        
+
     } catch (err) {
         messages.push(err);
     }

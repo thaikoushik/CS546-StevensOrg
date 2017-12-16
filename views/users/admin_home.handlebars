@@ -1,39 +1,37 @@
-<!--
+<div class="col-md-8 col-md-offset-4">
+  <h4>Welcome Admin, {{user.username}}</h4>
+  {{# if login }}
+    Create Some events in the department,
+     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventCreate"><i class="fa fa-plus"></i> Create Event</button>
+  {{else}}
+      <div></div>
+  {{/if}}
+ 
+     <!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}">-->
+</div>
 
-{{# each productsList }}
-
-<div class="row">
+<div class="row" style="margin-top:1%;">
+{{# each createdEvents }}
     {{# each this}}
 
     <div class="col-sm-6 col-md-4">
         <div class="thumbnail">
-            <img src="{{ this.imagePath }}" class="img-responsive" alt="...">
+            <img src="{{ this.imageURL }}" class="img-responsive" alt="...">
             <div class="caption">
-                <a href="/product-view/{{this._id}}" class=""><h3>{{ this.title }}</h3></a>
-                <p class="description">{{ this.description }}</p>
+                <a href="/event/eventdetail/{{this._id}}" class=""><h3>{{ this.name }}</h3></a>
+                <p class="eventDescription">{{ this.eventDescription }}</p>
                 <div class="clearfix">
-                    <div class="price pull-left">${{ this.price }}</div>
-                    <a href="/add-to-cart/{{ this._id }}" class="btn btn-success pull-right" role="button">Add to Shopping Cart</a>
+                    <div class="price">${{ this.ticketPrice }}
+                    </div>
+                  
                 </div>
+
             </div>
         </div>
     </div>
     {{/each}}
+{{/each}}
 
-</div>
-
-{{/each}}-->
-<div class="row">
-    <div class="col-md-4 col-md-offset-4">
-        <h1>This is home for admin</h1>
-        {{# if login }}
-           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventCreate"><i class="fa fa-search"></i> Create Event</button>
-        {{else}}
-            <div></div>
-        {{/if}}
-       
-           <!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}">-->
-     </div>
 </div>
 
 <div class="modal fade" id="eventCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

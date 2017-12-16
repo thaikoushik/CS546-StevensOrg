@@ -1,84 +1,271 @@
 .profile {
-  width: 100%;
-  position: relative;
-  background: #FFF;
-  border: 1px solid #D5D5D5;
-  padding-bottom: 5px;
-  margin-bottom: 20px;
+    width: 100%;
+    position: relative;
+    background: #FFF;
+    border: 1px solid #D5D5D5;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+
+.thumbnail img{
+    max-height: 250px;
+}
+
+.thumbnail .description{
+    color: #7f7f7f;
 }
 
 .profile .image {
-  display: block;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  text-align: center;
-  border: 5px solid #FFF;
+    display: block;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    text-align: center;
+    border: 5px solid #FFF;
 }
 
 .profile .user {
-  position: relative;
-  padding: 0 4% 0;
+    position: relative;
+    padding: 0 4% 0;
 }
 
 .profile .user .avatar {
-  position: absolute;
-  left: 20px;
-  top: -85px;
-  z-index: 2;
+    position: absolute;
+    left: 20px;
+    top: -85px;
+    z-index: 2;
 }
 
 .profile .user h2 {
-  font-size: 16px;
-  line-height: 20px;
-  display: block;
-  float: left;
-  margin: 4px 0px 0px 10px;
-  font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    display: block;
+    float: left;
+    margin: 4px 0px 0px 10px;
+    font-weight: bold;
 }
 
 .profile .user .actions {
-  float: right;
+    float: right;
 }
 
 .profile .user .actions .btn {
-  margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 .profile .info {
-  float: left;
-  margin-left: 5%;
+    float: left;
+    margin-left: 5%;
 }
 
-.img-profile{
-    height:100px;
-    width:100px;
+.img-profile {
+    height: 100px;
+    width: 100px;
 }
 
-.img-cover{
-    width:800px;
-    height:300px;
+.img-cover {
+    height: 157px;
+    width: 197px;
 }
 
-.info-label{
-  color: #868e96;
+.info-label {
+    color: #868e96;
 }
 
-p { word-break: break-all; }
+.eventDescription {
+    height: 3em;
+    overflow: hidden;
+}
 
+
+.price {
+    font-weight: bold;
+}
+
+p {
+    word-break: break-all;
+}
+
+.register-event {
+    float: right;
+    margin-right: 63%;
+    margin-top: 12%;
+}
+
+.confirm-registration{
+    float: right;
+    margin-right: 55%;
+    margin-top: 12%;
+}
+
+.getRegisteredUsers {
+  margin-top: 15%;
+  margin-bottom: 2%;
+}
+
+.description{
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.credit-card-box .panel-title {
+    display: inline;
+    font-weight: bold;
+}
+
+.credit-card-box .form-control.error {
+    border-color: red;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+.credit-card-box label.error {
+    font-weight: bold;
+    color: red;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
+.credit-card-box .payment-errors {
+    font-weight: bold;
+    color: red;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
+.credit-card-box label {
+    display: block;
+}
+
+
+/* The old "center div vertically" hack */
+
+.credit-card-box .display-table {
+    display: table;
+}
+
+.credit-card-box .display-tr {
+    display: table-row;
+}
+
+.credit-card-box .display-td {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
+}
+
+
+/* Just looks nicer */
+
+.credit-card-box .panel-heading img {
+    min-width: 180px;
+}
+
+.footer-copyright{
+    text-align: center;
+}
+
+.event-description{
+  width: 107%;
+}
+
+#event-detail{
+    display: inline;
+    float: left;
+    width: 950px;
+    margin: 0 5px;
+    margin-bottom: 10px;
+    margin-top: 10px; 
+    border-radius: 3px;
+    background-clip: padding-box;
+    overflow: hidden;
+    z-index: 1;
+    position: relative;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3); 
+}
+
+#event-detail .content {
+    padding: 15px 15px 20px 15px;
+    min-height: 50px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+#image-event {
+    float: left;
+    overflow: hidden;
+    line-height: 0;
+    margin-bottom: 10px;
+}
+
+#event-wrapper {
+    background-position: 455px 0;
+    background-repeat: repeat-y;
+    width: 75%;
+    min-height: 100px;
+    float: right;
+}
+#event{
+    float: left;
+    width: 435px;
+    padding-right: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+#event .event-name {
+    font-family: "Gibson-Semibold", "Akkurat-Pro", sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 32px;
+}
+
+#event .supports {
+    font-size: 13px;
+}
+
+#event #when {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#event #price-range {
+    font-size: 15px;
+}
+
+#event-info {
+    float: left;
+    width: 245px;
+    font-size: 13px;
+    padding: 5px 0 0px 25px;
+    line-height: 1.2;
+}
+
+#event-info .location {
+    margin: 3px 0 0 0;
+}
+  
 @media (max-width: 768px) {
-  .btn-responsive {
-    padding:2px 4px;
-    font-size:80%;
-    line-height: 1;
-    border-radius:3px;
-  }
+    .btn-responsive {
+        padding: 2px 4px;
+        font-size: 80%;
+        line-height: 1;
+        border-radius: 3px;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 992px) {
-  .btn-responsive {
-    padding:4px 9px;
-    font-size:90%;
-    line-height: 1.2;
-  }
+    .btn-responsive {
+        padding: 4px 9px;
+        font-size: 90%;
+        line-height: 1.2;
+    }
 }
+
+

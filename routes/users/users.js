@@ -55,7 +55,6 @@ passport.use('local.signup', new LocalStrategy({
     try{
         const user = await userData.findUserByUsername(username);
         if(!user || user===null|| user === undefined){
-            console.log("herereererere");
             if(!req.body.firstname) throw "Provide Email - It will be your user name";
             if(!req.body.lastname) throw "Provide password";
             if(!req.body.firstname) throw "Provide First Name";
@@ -82,7 +81,6 @@ passport.use('local.signup', new LocalStrategy({
             const insertedUser =  await userData.findUserById(newUserCreated.insertedId);
             return done(null,insertedUser);    
         } else {
-            console.log("cchck");
             messages.push("Username already exists try different one.");
             //throw "Username already exists try different one."
         }
@@ -147,12 +145,10 @@ router.get('/private', isLoggedIn, async (req, res) => {
     for(let i=0;i<events.length;i+=chunksize){
         eventsList.push(events.slice(i,i+chunknsize));
     }
-    console.log(eventsList);
     if(role === "Student"){
         res.render('users/users_home', { user: req.user, eventsList: eventsList });    
     } else {
-        res.redirect('/admin');//, {user: req.user});
-        //res.render('users/admin_home', {user: req.user});
+        res.redirect('/admin');
     }
     
 });

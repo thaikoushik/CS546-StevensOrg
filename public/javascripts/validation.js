@@ -10,22 +10,70 @@ $(document).ready(function() {
         day = '0' + day.toString();
 
     var maxDate = year + '-' + month + '-' + day;
-    // alert(maxDate);
-    $('#eventDate').attr('min', maxDate);
     
+    $('#eventDate').attr('min', maxDate);
+
+    $('#list').click(function(event) {
+        event.preventDefault();
+        $('#products .item').addClass('list-group-item');
+    });
+    $('#grid').click(function(event) {
+        event.preventDefault();
+        $('#products .item').removeClass('list-group-item');
+        $('#products .item').addClass('grid-group-item');
+    });
 });
 
-function registerEvent(id){
-   var eventId = id;
+
+function registerEvent(id) {
+    var eventId = id;
     $.ajax({
         type: "POST",
-        url: '/event/registerEvent/'+eventId,
+        url: '/event/registerEvent/' + eventId,
         beforeSend: function() {
-            $('#registerEvent').html("<img src='/images/loading.gif' />");
+            $('#registerForEvent').html("<img src='/images/loading.gif' />");
         },
-        success: function(data){
-            $('#registerEvent').val("Registered");
-            $('#registerEvent').attr("disabled", "disabled");
+        success: function(data) {
+            $('#registerForEvent').val("Registered");
+            $('#registerForEvent').attr("disabled", "disabled");
         }
     });
+}
+
+function registerEventAfterPay(id) {
+    Stripe.setPublishableKey('pk_test_hHcSvZ8t13NmFM6u3KcTgptk');
+    var $form = $('#payment-form');
+    $('#charge-error').addClass('hidden');
+    $form.find('button').prop('disabled', true);
+    Stripe.card.createToken({
+        number: $('#card-number').val(),
+        cvc: $('#card-cvc').val(),
+        exp_month: $('#card-expiry-month').val(),
+        exp_year: $('#card-expiry-year').val(),
+        name: $('#card-name').val()
+    }, stripeResponseHandler);
+    return false;
+
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+
+            $('#charge-error').text(response.error.message);
+            $('#charge-error').removeClass('hidden');
+            $form.find('button').prop('disabled', false); 
+
+        } else {
+            var token = response.id;
+            var data = {
+                stripeToken: token
+            };
+            var eventId = id;
+            $.post('/event/registerPayableEvent/' + eventId, data, (response) => {
+                window.location.reload(true);
+            });
+        }
+    }
+}
+
+function getRegisteredUsers(id) {
+    window.open('/event/getRegisteredUsers/' + id);
 }
