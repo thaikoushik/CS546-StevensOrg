@@ -1,0 +1,28 @@
+this is home page for students 
+	{{ user.username }}
+
+
+{{# each ticketList }}
+
+<div class="row">
+    {{# each this}}
+    
+    <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+            <div class="caption">
+                <a href="/user/tickets/{{this._id}}" class=""><h3>{{ this.eventName }}</h3></a>
+                <p class="description">{{ this.description }}</p>
+                <p class = "Date">{{ this.eventDate }}</p>
+                <div class="clearfix">
+                    
+                    <a href="/event/eventdetail/{{this.eventId}}" class="btn btn-success pull-right" role="button">View Event Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+
+</div>
+
+{{/each}}
+
