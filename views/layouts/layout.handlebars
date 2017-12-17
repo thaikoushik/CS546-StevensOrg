@@ -22,17 +22,20 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
       <ul class="navbar-nav mr-auto">
+        {{#if login}}
         <li class="nav-item active">
-          {{#if login}}
+          
           <a class="nav-link" href="/user/private">Home
 
             <span class="sr-only">(current)</span>
           </a>
-          {{/if}}
-        </li>
+          
 
+        </li>
+        {{/if}}
+        {{#if login}}
         <li class="nav-item">
-          {{#if login}}
+         
           <div class="btn-group">
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Departments
@@ -47,14 +50,16 @@
               <button class="dropdown-item" type="button" onclick="displayDeptWiseEvent('CE');">CE</button>
 
             </div>
-            {{/if}}
+            
           </div>
         </li>
+        
         <li class="nav-item">
-          {{#if login}}
+          
           <a class="nav-link" href="/user/tickets/">Tickets</a>
-          {{/if}}
+          
         </li>
+        {{/if}}
       </ul>
 
       <div class="btn-group">
@@ -180,14 +185,12 @@
           </p>
           <p>
             <i class="fa fa-envelope mr-3"></i>
-            <a href="mailto:kthai@stevens.edu"></a> Koushik Thai </p>
+            <a href="mailto:kkandhas@stevens.edu"> Karan Prabu Kandhaswamy </a>
+            </p>
           <p>
             <i class="fa fa-envelope mr-3"></i>
-            <a href="mailto:kthai@stevens.edu"></a> Koushik Thai </p>
-          <p>
-            <i class="fa fa-envelope mr-3"></i>
-            <a href="mailto:kthai@stevens.edu"></a> Koushik Thai </p>
-          <p>
+            <a href="mailto:alakshm1@stevens.edu">Abishek Lakshmirathan </a>
+          </p>
             <i class="fa fa-print mr-3"></i> + 409 - 217 - 9925</p>
         </div>
         <!--/.Fourth column-->

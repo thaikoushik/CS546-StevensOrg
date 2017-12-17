@@ -6,6 +6,8 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt-nodejs');
 const uuid = require("node-uuid");
 const eventData = require('../../data/eventData');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer')
 
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -254,6 +256,116 @@ router.post('/updateUser', async (req, res) => {
         res.status(404).json({ error: e });
     }
 
+});
+
+router.get('/forgot', function(req, res) {
+    res.render('users/forgot', {
+        user: req.body.username
+    });
+});
+
+router.post('/forgot', async(req, res, next) => {
+    try {
+        const user = await userData.findUserByUsername(req.body.username);
+        
+
+        var token = crypto.randomBytes(64).toString('hex');
+
+        if (!user) {
+            req.flash('error', 'No account with that email address exists.');
+            return res.redirect('user/forgot');
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        
+
+
+
+        smtpTransport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+
+                user: 'stevensorgsync@gmail.com',
+                pass: 'stevens12345'
+            }
+        });
+        var mailOptions = {
+            to: req.body.username,
+            from: 'stevensorgsync@gmail.com',
+            subject: 'Stevens Org Sync Account Password Reset',
+            text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                'http://' + req.headers.host + '/user/reset/' + token + '\n\n' +
+                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+        };
+        smtpTransport.sendMail(mailOptions, function(err, info) {
+            if (err)
+                console.log(err);
+            //else
+                //console.log(info);
+
+            res.redirect('/user/login');
+        });
+
+    } catch (err) {
+        if (err)
+            return next(err);
+        res.redirect('/user/forgot');
+    }
+});
+
+/*  controller for reset route */
+
+router.get('/reset/:token', function(req, res) {
+    res.render('users/reset', {
+        user: req.body.username
+    });
+});
+
+router.post('/resetPassword', async(req, res) => {
+
+    try {
+        const user = await userData.findUserByUsername(req.body.username);
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('back');
+        }
+        hashedPassword = encryptPassword(req.body.password);
+        var updatedData = await userData.resetPassword(req.body.username, hashedPassword);
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+
+        var smtpTransport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'stevensorgsync@gmail.com',
+                pass: 'stevens12345'
+            }
+        });
+        var mailOptions = {
+            to: req.body.username,
+            from: 'stevensorgsync@gmail.com',
+            subject: 'Your Stevens Org Sync Account password has been changed',
+            text: 'Hello,\n\n' +
+                'This is a confirmation that the password for your account ' + req.body.username + ' has just been changed.\n'
+        };
+        smtpTransport.sendMail(mailOptions, function(err, info) {
+            if (err)
+                console.log(err);
+            //else
+               // console.log(info);
+            req.flash('success', 'Success! Your password has been changed.');
+
+            res.redirect('/user/login');
+
+        });
+    } catch (err) {
+        //console.log(err);
+        return err;
+    }
 });
 
 

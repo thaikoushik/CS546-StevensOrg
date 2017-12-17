@@ -55,34 +55,52 @@ const exportedMethods = {
         try {
 
             const userCollections = await users();
-
+            const userDetails = await this.findUserById(id);
             await userCollections.update({
                 _id: id
             }, {
-                    $set: {
-
-                        username: updateExistingUser.email,
+                $set: {
 
 
-                        firstname: updateExistingUser.firstname,
+                    firstname: updateExistingUser.firstname,
 
-                        lastname: updateExistingUser.lastname,
-
-
-                        address: updateExistingUser.address,
+                    lastname: updateExistingUser.lastname,
 
 
-                        phone: updateExistingUser.phone,
+                    address: updateExistingUser.address,
 
 
-                        department: updateExistingUser.department,
-                    }
-                });
-            const userDetails = await userData.findUserById(id);
-            return userDetails;
+                    phone: updateExistingUser.phone,
+
+
+                    department: userDetails.department,
+                }
+            });
+            const userDet = await userData.findUserById(id);
+            return userDet;
 
         } catch (e) {
             return e;
+        }
+    },
+
+    async resetPassword(username, password) {
+        try {
+            const user = await this.findUserByUsername(username);
+
+            const userCollections = await users();
+
+            await userCollections.update({
+                _id: user._id
+            }, {
+                $set: {
+                    password: password
+
+                }
+
+            });
+        } catch (e) {
+            console.log(e);
         }
     }
 
