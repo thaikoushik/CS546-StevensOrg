@@ -44,10 +44,10 @@
                                 </div>
                                 {{ else }}
                                 <div class="section" style="padding-bottom:20px;">
-                                    {{# if restrict}}
+                                   <!-- {{# if restrict}}
                                     <br>
                                     <div><b>THIS is for only {{event.department}} Students</b></div>
-                                    {{ else }}
+                                    {{ else }} -->
                                     {{# if isRegistered}}
                                     <input type="button" name="registrationDone" id="registrationDone" value="Registered" class="btn btn-primary confirm-registration"
                                         disabled> {{ else }} {{# if payableEvent}}
@@ -59,7 +59,7 @@
                                         <input type="button" name="registerForEvent" value="Register" id="registerForEvent" class="btn btn-primary register-event"
                                             onclick="registerEvent('{{ event._id }}');">
                                     </div>
-                                    {{/if}}
+                                    <!--{{/if}} -->
                                     {{/if}}
                                     {{/if}}
                                 </div>
