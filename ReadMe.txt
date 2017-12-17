@@ -21,8 +21,13 @@ CONTENTS OF THIS FILE
 4. Configuration
 	4.a Temporary - Changing the tempFilePath in the routes/events.js - to any local file path of your choice. (This is a temporary work around).
 	4.b Updating the user role to Admin from Mongodb. This is a temporary work around for the changing the user role.
+	
+5. Files : group10.mp4 - Demo Video
+	   group10DBdump.archive - Database Dump.
+	   ReadMe.txt - Instructions to compile and run the application
+	   Rest of the files comprise the code.
 
-5. Project Done by
+6. Project Done by
 	Koushik Thai - kthai@stevens.edu
 	Karan Prabu Kandhaswamy - kkandhas@stevens.edu
 	Abishek Lakshmirathan - alakshm1@stevens.edu
