@@ -1,75 +1,78 @@
 <div class="container">
-   <div class="row">
-      <div class="col-md-10">
-         <section id="event-detail">
-            <div class="content ">
-               <div id="image-event">
-                  <img src="/{{ event.imageURL }}.jpg" class="img-cover">
-               </div>
-               <div id="event-wrapper" class="clearfix">
-                  <div id="event" itemscope="" itemtype="http://schema.org/Event">
-                     <div class="event-name" itemprop="name">
-                        <h2>{{event.name}}</h2>
-                     </div>
-                     <div id="when">
-                        <meta itemprop="startDate" content="2017-12-29">
-                        <span class="date">{{{event.eventDate}}} </span>
-                     </div>
-                     <div id="price-range" class="hideMe">
-                        {{# if payableEvent}}           
-                        <br>
-                        <span class="price">TicketPrice:</span> ${{event.ticketPrice}}
-                        {{ else}}
-                        <br>
-                        <label>This is a Free Event</label>
-                        {{/if}}
-                     </div>
-                  </div>
-                  <div id="event-info">
-                     <p class="venue" title="White Eagle Hall">
-                     </p>
-                     <div itemprop="location" itemscope="" itemtype="http://schema.org/Place">  {{{event.location}}}   </div>
-                     <p></p>
-                     <div class="location">
-                        <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
-                           <span itemprop="streetAddress">{{{event.location}}}</span>
-                           <br>
-                           <span itemprop="addressLocality"> Stevens Insitute of Technology, Hoboken, NJ </span>
+    <div class="row">
+        <div class="col-md-10">
+            <section id="event-detail">
+                <div class="content ">
+                    <div id="image-event">
+                        <img src="/{{ event.imageURL }}.jpg" class="img-cover">
+                    </div>
+                    <div id="event-wrapper" class="clearfix">
+                        <div id="event" itemscope="" itemtype="http://schema.org/Event">
+                            <div class="event-name" itemprop="name">
+                                <h2>{{event.name}}</h2>
+                            </div>
+                            <div id="when">
+                                <meta itemprop="startDate" content="2017-12-29">
+                                <span class="date">{{{event.eventDate}}} </span>
+                            </div>
+                            <div id="price-range" class="hideMe">
+                                {{# if payableEvent}}
+                                <br>
+                                <span class="price">TicketPrice:</span> ${{event.ticketPrice}} {{ else}}
+                                <br>
+                                <label>This is a Free Event</label>
+                                {{/if}}
+                            </div>
                         </div>
-                     </div>
-                     <div>
-                        {{# if admin}}
-                        <div>
-                           <input type="button" name="registerForEvent" value="Download Registered Users" class="btn btn-primary getRegisteredUsers" id="getRegisteredUsers" onclick="getRegisteredUsers('{{ event._id }}');">
+                        <div id="event-info">
+                            <p class="venue" title="White Eagle Hall">
+                            </p>
+                            <div itemprop="location" itemscope="" itemtype="http://schema.org/Place"> {{{event.location}}} </div>
+                            <p></p>
+                            <div class="location">
+                                <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+                                    <span itemprop="streetAddress">{{{event.location}}}</span>
+                                    <br>
+                                    <span itemprop="addressLocality"> Stevens Insitute of Technology, Hoboken, NJ </span>
+                                </div>
+                            </div>
+                            <div>
+                                {{# if admin}}
+                                <div>
+                                    <input type="button" name="registerForEvent" value="Download Registered Users" class="btn btn-primary getRegisteredUsers"
+                                        id="getRegisteredUsers" onclick="getRegisteredUsers('{{ event._id }}');">
+                                </div>
+                                {{ else }}
+                                <div class="section" style="padding-bottom:20px;">
+                                    {{# if isRegistered}}
+                                    <input type="button" name="registrationDone" id="registrationDone" value="Registered" class="btn btn-primary confirm-registration"
+                                        disabled> {{ else }} {{# if payableEvent}}
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    <input type="button" name="registerPayableEvent" id="registerPayableEvent" class="btn btn-primary register-event" value="Register"
+                                        data-toggle="modal" data-target="#registerMainEvent"> {{ else }}
+                                    <div>
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        <input type="button" name="registerForEvent" value="Register" id="registerForEvent" class="btn btn-primary register-event"
+                                            onclick="registerEvent('{{ event._id }}');">
+                                    </div>
+                                    {{/if}} {{/if}}
+                                </div>
+                                {{/if}}
+                            </div>
                         </div>
-                        {{ else }}
-                        <div class="section" style="padding-bottom:20px;">
-                           {{# if isRegistered}}
-                           <input type="button" name="registrationDone" id="registrationDone" value="Registered" class="btn btn-primary confirm-registration" disabled> {{ else }} {{# if payableEvent}}
-                           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                           <input type="button" name="registerPayableEvent" id="registerPayableEvent" class="btn btn-primary register-event" value="Register" data-toggle="modal" data-target="#registerMainEvent"> {{ else }}
-                           <div>
-                              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                              <input type="button" name="registerForEvent" value="Register" id="registerForEvent" class="btn btn-primary register-event" onclick="registerEvent('{{ event._id }}');">
-                           </div>
-                           {{/if}} {{/if}}
-                        </div>
-                        {{/if}}
-                     </div>
-                  </div>
-               </div>
-               <div id="additional-ticket-text" class="empty-div">
-               </div>
-               <div class="clear"></div>
+                    </div>
+                    <div id="additional-ticket-text" class="empty-div">
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </section>
+            <div class="event-description">
+                <p>
+                    {{{event.eventDescription}}}
+                </p>
             </div>
-         </section>
-         <div class="event-description">
-            <p>
-               {{{event.eventDescription}}}
-            </p>
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
 </div>
 
 
@@ -104,8 +107,11 @@ on <= small devices and 4/12 page width on >= medium devices -->
                                                 <div class="form-group">
                                                     <label for="cardNumber">CARD NUMBER</label>
                                                     <div class="input-group">
-                                                        <input type="tel" class="form-control" name="cardNumber" placeholder="Valid Card Number" autocomplete="cc-number" id="card-number" required autofocus />
-                                                        <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                                        <input type="tel" class="form-control" name="cardNumber" placeholder="Valid Card Number" autocomplete="cc-number" id="card-number"
+                                                            required autofocus />
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-credit-card"></i>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,9 +119,13 @@ on <= small devices and 4/12 page width on >= medium devices -->
                                         <div class="row">
                                             <div class="col-xs-7">
                                                 <div class="form-group">
-                                                    <label for="cardExpiry"><span class="hidden-xs">EXPIRATION</span><span class="visible-xs-inline">EXP</span> DATE</label>
-                                                    <input type="tel" class="form-control" name="cardExpiry" placeholder="MM" autocomplete="cc-exp" id="card-expiry-month" required />
-                                                    <input type="tel" class="form-control" name="cardExpiry" placeholder="YY" autocomplete="cc-exp" id="card-expiry-year" required />
+                                                    <label for="cardExpiry">
+                                                        <span class="hidden-xs">EXPIRATION</span>
+                                                        <span class="visible-xs-inline">EXP</span> DATE</label>
+                                                    <input type="tel" class="form-control" name="cardExpiry" placeholder="MM" autocomplete="cc-exp" id="card-expiry-month" required
+                                                    />
+                                                    <input type="tel" class="form-control" name="cardExpiry" placeholder="YY" autocomplete="cc-exp" id="card-expiry-year" required
+                                                    />
                                                 </div>
                                             </div>
                                             <div class="col-xs-5 col-md-5 pull-right">
@@ -156,5 +166,4 @@ on <= small devices and 4/12 page width on >= medium devices -->
     </div>
 </div>
 
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-    <!--<script type="text/javascript" src="/javascripts/paymentProcess.js"></script>-->
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>

@@ -11,7 +11,7 @@ const exportedMethods = {
     async createEvent(newEvent) {
         try {
             if (!newEvent) throw "Event object is empty";
-            //const userCollections = await users();
+
             const eventCollections = await events();
             let URLPath = newEvent.file.path;
             URLPath = URLPath.replace(/\\/g, "/");
@@ -65,9 +65,40 @@ const exportedMethods = {
     async getAllEvents() {
         try {
             const eventCollections = await events();
-            const eventsList = [];
+            var eventsList = [];
             eventsList = await eventCollections.find({}).toArray();
+            for (i = 0; i < eventsList.length; i++) {
+                if (eventsList[i].ticketPrice > 0) {
+                    eventsList[i].payableEvent = true;
+                } else {
+                    eventsList[i].payableEvent = false;
+                }
+            }
             return eventsList;
+        } catch (e) {
+            return e;
+        }
+    },
+
+    async getDeptAllEvents(dept) {
+
+        try {
+            const eventCollections = await events();
+            var eventsList = [];
+            var resList = [];
+            eventsList = await eventCollections.find({}).toArray();
+
+            for (i = 0; i < eventsList.length; i++) {
+                if (eventsList[i].department == dept) {
+                    if (eventsList[i].ticketPrice > 0) {
+                        eventsList[i].payableEvent = true;
+                    } else {
+                        eventsList[i].payableEvent = false;
+                    }
+                    resList.push(eventsList[i]);
+                }
+            }
+            return resList;
         } catch (e) {
             return e;
         }
@@ -75,8 +106,8 @@ const exportedMethods = {
 
     async registerForEvent(id, userId, tr_id) {
         try {
-            console.log("eventDat78");
             const userCollections = await users();
+            const eventCollections = await events();
             const eventDetails = await this.getEventById(id);
             const organizerDetails = await userData.findUserById(eventDetails.organizerId);
             const organizerName = organizerDetails.firstname + " " + organizerDetails.lastname;
@@ -86,33 +117,41 @@ const exportedMethods = {
                 datePaid: new Date()
             };
 
-            if (eventDetails.tickets > 0 && eventDetails.availableTickets <=0) {
+            if (eventDetails.tickets > 0 && eventDetails.availableTickets <= 0) {
                 throw "No Tickets available";
             }
-            
-            const eventRegistered = {
-                    _id: uuid.v4(),
-                    eventId: eventDetails._id,
-                    eventName: eventDetails.name,
-                    eventOrganizer: organizerName,
-                    department: eventDetails.department,
-                    ticketPrice: eventDetails.ticketPrice,
-                    description: eventDetails.eventDescription,
-                    location: eventDetails.location,
-                    eventDate: eventDetails.eventDate,
-                    contactInfo: eventDetails.contactInfo,
-                    restrictDepartment: eventDetails.restrictDepartment,
-                    paymentInfo: paymentDetails
-               };
 
-            if(eventDetails.tickets>0){
-                eventRegistered.availableTickets =  eventDetails.availableTickets-1;
+            const eventRegistered = {
+                _id: uuid.v4(),
+                eventId: eventDetails._id,
+                eventName: eventDetails.name,
+                eventOrganizer: organizerName,
+                department: eventDetails.department,
+                ticketPrice: eventDetails.ticketPrice,
+                description: eventDetails.eventDescription,
+                location: eventDetails.location,
+                eventDate: eventDetails.eventDate,
+                contactInfo: eventDetails.contactInfo,
+                restrictDepartment: eventDetails.restrictDepartment,
+                paymentInfo: paymentDetails
+            };
+
+            if (eventDetails.tickets > 0) {
+                eventRegistered.availableTickets = eventDetails.availableTickets - 1;
             }
 
-            console.log("eventDat78");
-            await userCollections.update({ _id: userId }, {
+            // Updating user table
+            const userCollectionsUpdated = await userCollections.update({ _id: eventDetails._id }, {
                 $addToSet: {
                     events: eventRegistered
+                }
+            });
+
+            // Updating Event Table
+
+            await eventCollections.update({ _id: userId }, {
+                $Set: {
+                    availableTickets: eventDetails.availableTickets - 1
                 }
             });
 
@@ -124,6 +163,8 @@ const exportedMethods = {
             console.log(e);
         }
     },
+
+
 
     async getAllCreatedEvents(id) {
         try {

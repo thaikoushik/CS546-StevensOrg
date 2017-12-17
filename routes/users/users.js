@@ -7,11 +7,11 @@ const bcrypt = require('bcrypt-nodejs');
 const uuid = require("node-uuid");
 const eventData = require('../../data/eventData');
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user);
 });
 
-passport.deserializeUser(async function(user, done) {
+passport.deserializeUser(async function (user, done) {
     var userDeserialize = await userData.findUserById(user._id);
     if (user) {
         done(null, user);
@@ -27,7 +27,7 @@ passport.use('local.login', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
     passReqToCallback: true
-}, async function(req, username, password, done) {
+}, async function (req, username, password, done) {
     try {
         const user = await userData.findUserByUsername(username);
         bcrypt.compare(password, user.password, (error, isValid) => {
@@ -51,44 +51,44 @@ passport.use('local.signup', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
-}, async function(req, username, password, done) {
-    try{
+}, async function (req, username, password, done) {
+    try {
         const user = await userData.findUserByUsername(username);
-        if(!user || user===null|| user === undefined){
-            if(!req.body.firstname) throw "Provide Email - It will be your user name";
-            if(!req.body.lastname) throw "Provide password";
-            if(!req.body.firstname) throw "Provide First Name";
-            if(!req.body.lastname) throw "Provide Last Name";
-            if(!req.body.address) throw "Provide address, tickets will be sent to the address";
-            if(!req.body.phone) throw "Provide Phone Number to recieve the tickets";
-            if(!req.body.department) throw "Provide Department to optimize the search";
-           // var userSession = req.session;
-           let eventsRegistered = [];
+        if (!user || user === null || user === undefined) {
+            if (!req.body.firstname) throw "Provide Email - It will be your user name";
+            if (!req.body.lastname) throw "Provide password";
+            if (!req.body.firstname) throw "Provide First Name";
+            if (!req.body.lastname) throw "Provide Last Name";
+            if (!req.body.address) throw "Provide address, tickets will be sent to the address";
+            if (!req.body.phone) throw "Provide Phone Number to recieve the tickets";
+            if (!req.body.department) throw "Provide Department to optimize the search";
+
+            let eventsRegistered = [];
             var newUser = {
                 _id: uuid.v4(),
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
                 username: req.body.email,
                 password: encryptPassword(password),
-                //sessionObject: userSession,
+
                 address: req.body.address,
-                phone:req.body.phone,
-                role:"Student",
+                phone: req.body.phone,
+                role: "Student",
                 department: req.body.department,
                 events: eventsRegistered
             };
             const newUserCreated = await userData.createUser(newUser);
-            const insertedUser =  await userData.findUserById(newUserCreated.insertedId);
-            return done(null,insertedUser);    
+            const insertedUser = await userData.findUserById(newUserCreated.insertedId);
+            return done(null, insertedUser);
         } else {
             messages.push("Username already exists try different one.");
-            //throw "Username already exists try different one."
+
         }
-        return done(null, false, req.flash('error',messages));
-    } catch(e){
-        return done(null, false, {"messages": e});
+        return done(null, false, req.flash('error', messages));
+    } catch (e) {
+        return done(null, false, { "messages": e });
     }
-    
+
 }));
 
 router.get('/login', (req, res) => {
@@ -142,24 +142,118 @@ router.get('/private', isLoggedIn, async (req, res) => {
     let eventsList = [];
     let events = await eventData.getAllEvents();
     let chunksize = 3;
-    for(let i=0;i<events.length;i+=chunksize){
-        eventsList.push(events.slice(i,i+chunknsize));
+    for (let i = 0; i < events.length; i += chunksize) {
+        eventsList.push(events.slice(i, i + chunksize));
     }
-    if(role === "Student"){
-        res.render('users/users_home', { user: req.user, eventsList: eventsList });    
+
+    if (role === "Student") {
+        res.render('users/users_home', { user: req.user, eventsList: eventsList });
     } else {
         res.redirect('/admin');
     }
-    
+
 });
 
+router.get('/private/:dept', isLoggedIn, async (req, res) => {
+    var role = req.user.role;
+    var dept = req.params.dept;
+
+    let eventsList = [];
+    let events = await eventData.getDeptAllEvents(dept);
+    let chunksize = 3;
+    for (let i = 0; i < events.length; i += chunksize) {
+        eventsList.push(events.slice(i, i + chunksize));
+    }
+
+    if (role === "Student") {
+        res.render('users/users_home', { user: req.user, eventsList: eventsList });
+
+    } else {
+        res.redirect('/admin');
+
+    }
+
+});
+
+router.get('/tickets', isLoggedIn, async (req, res) => {
+
+    var role = req.user.role;
+    var id = req.user._id;
+
+
+    var ticketList = []
+    let tickets = await userData.getAllTicketDetails(id);
+    let chunksize = 3;
+    for (let i = 0; i < tickets.length; i += chunksize) {
+        ticketList.push(tickets.slice(i, i + chunksize));
+    }
+
+    if (role === "Student") {
+        res.render('users/users_tickets', { user: req.user, ticketList: ticketList });
+
+    } else {
+        res.redirect('/admin');
+
+    }
+
+});
+
+router.get('/tickets/:id', isLoggedIn, async (req, res) => {
+    var role = req.user.role;
+    var id = req.user._id;
+    var ticketId = req.params.id;
+
+    var ticketDetails;
+    let tickets = await userData.getAllTicketDetails(id);
+
+    for (let i = 0; i < tickets.length; i++) {
+        if (ticketId == tickets[i]._id) {
+            ticketDetails = tickets[i];
+        }
+    }
+
+    if (role === "Student") {
+        res.render('users/ticketDetail', {
+            user: req.user,
+            ticketDetails: ticketDetails,
+            contactInfo: ticketDetails.contactInfo,
+            paymentInfo: ticketDetails.paymentInfo
+        });
+
+    } else {
+        res.redirect('/admin');
+    }
+});
+
+
 router.get('/', (req, res) => {
-    if(req.isAuthenticated()){
-        res.render('users/users_home', {user: req.user});
-    }else {
+    if (req.isAuthenticated()) {
+        res.render('users/users_home', { user: req.user });
+    } else {
         var messages = req.flash('error');
         res.render('users/login', { messages: messages, hasErrors: messages.length > 0 });
     }
+});
+
+router.get('/updateUser', (req, res) => {
+
+    res.render('users/updateUser', { user: req.user });
+
+});
+
+router.post('/updateUser', async (req, res) => {
+    try {
+        let updatedUserData = req.body;
+
+        let getUser = await userData.findUserById(req.user._id);
+
+        editedData = await userData.updateUser(req.user._id, updatedUserData);
+
+        res.redirect('/user/private')
+    } catch (e) {
+        res.status(404).json({ error: e });
+    }
+
 });
 
 
@@ -167,7 +261,7 @@ router.get('/', (req, res) => {
     Admin Pages are done in admin.js 
 */
 
-router.get('/logout', isLoggedIn, function(req, res) {
+router.get('/logout', isLoggedIn, function (req, res) {
     req.logout();
     res.redirect('/');
 });
@@ -188,7 +282,7 @@ function notLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
-function encryptPassword(password){
-  return bcrypt.hashSync(password,bcrypt.genSaltSync(40),null);
+function encryptPassword(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(40), null);
 };
 

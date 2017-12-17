@@ -6,16 +6,15 @@ const multer = require('multer');
 const path = require('path');
 
 var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
+    destination: function (req, file, cb) {
         cb(null, './public/uploaded/files/');
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, Date.now() + '.jpg'); //Appending .jpg
     }
 });
 
-router.get('/', async(req, res) => {
-    //const createdEvents = [];
+router.get('/', async (req, res) => {
 
     if (!req.isAuthenticated()) {
         res.redirect('/user/login');
@@ -31,7 +30,7 @@ router.get('/', async(req, res) => {
 
 });
 
-router.post('/createEvent', multer({ storage: storage }).single('image'), async(req, res) => {
+router.post('/createEvent', multer({ storage: storage }).single('image'), async (req, res) => {
     try {
         const event = await eventData.createEvent(req);
         if (event) {

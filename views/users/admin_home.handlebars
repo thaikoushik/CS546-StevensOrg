@@ -1,36 +1,36 @@
 <div class="col-md-8 col-md-offset-4">
   <h4>Welcome Admin, {{user.username}}</h4>
-  {{# if login }}
-    Create Some events in the department,
-     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventCreate"><i class="fa fa-plus"></i> Create Event</button>
+  {{# if login }} Create Some events in the department,
+  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventCreate">
+    <i class="fa fa-plus"></i> Create Event</button>
   {{else}}
-      <div></div>
+  <div></div>
   {{/if}}
- 
-     <!-- <input type="hidden" name="_csrf" value="{{ csrfToken }}">-->
+
 </div>
 
 <div class="row" style="margin-top:1%;">
-{{# each createdEvents }}
-    {{# each this}}
+  {{# each createdEvents }} {{# each this}}
 
-    <div class="col-sm-6 col-md-4">
-        <div class="thumbnail">
-            <img src="{{ this.imageURL }}" class="img-responsive" alt="...">
-            <div class="caption">
-                <a href="/event/eventdetail/{{this._id}}" class=""><h3>{{ this.name }}</h3></a>
-                <p class="eventDescription">{{ this.eventDescription }}</p>
-                <div class="clearfix">
-                    <div class="price">${{ this.ticketPrice }}
-                    </div>
-                  
-                </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="{{ this.imageURL }}" class="img-responsive" alt="...">
+      <div class="caption">
+        <a href="/event/eventdetail/{{this._id}}" class="">
+          <h3>{{ this.name }}</h3>
+        </a>
+        <p class="eventDescription">{{ this.eventDescription }}</p>
+        <div class="clearfix">
+          <div class="price">${{ this.ticketPrice }}
+          </div>
 
-            </div>
         </div>
+
+      </div>
     </div>
-    {{/each}}
-{{/each}}
+  </div>
+  {{/each}} {{/each}}
 
 </div>
 
@@ -45,88 +45,90 @@
       </div>
       <div class="modal-body">
         <form id="contactForm" action="/admin/createEvent" method="post" enctype="multipart/form-data" data-toggle="validator">
-        <label class="info-label disabled">*All fields are required</label>
-           <div class="form-group">
-                <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name" data-error="Event Name is missing" required>
-                <div class="help-block with-errors"></div>
-            </div>
+          <label class="info-label disabled">*All fields are required</label>
+          <div class="form-group">
+            <input type="text" id="eventName" name="eventName" class="form-control" placeholder="Event Name" data-error="Event Name is missing"
+              required>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            <div class="form-group">
-                <lable for="organizerName">Organizer Name</lable><br>
-                <label>{{{user.firstname}}} {{{user.lastname}}}</label>
-                <!--<input type="text" id="organizerName" name="organizerName" class="form-control" data-error="Organizer is missing" required disabled> {{{user.username}}} </input>-->
-                <div class="help-block with-errors"></div>
-            </div>
+          <div class="form-group">
+            <lable for="organizerName">Organizer Name</lable>
+            <br>
+            <label>{{{user.firstname}}} {{{user.lastname}}}</label>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            <div class="form-group">
-              <textarea class="form-control" id="description" name="description" placeholder="Description" rows="3"></textarea>
-            </div>
+          <div class="form-group">
+            <textarea class="form-control" id="description" name="description" placeholder="Description" rows="3"></textarea>
+          </div>
 
-            <div class="form-group">
-              <label class="info-label disabled">Provide 0 if it has unlimited Tickets</label>
-                <input type="number" id="tickets" name="tickets" class="form-control" placeholder="Number of Tickets" data-error="Image" required>
-                <div class="help-block with-errors"></div>
-            </div>
+          <div class="form-group">
+            <label class="info-label disabled">Provide 0 if it has unlimited Tickets</label>
+            <input type="number" id="tickets" name="tickets" class="form-control" placeholder="Number of Tickets" data-error="Image"
+              required>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            <div class="form-group">
-                <input type="file" id="image" name="image" placeholder="Image for the event" class="form-control" required>
-                <div class="help-block with-errors"></div>
-            </div>
+          <div class="form-group">
+            <input type="file" id="image" name="image" placeholder="Image for the event" class="form-control" required>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            <div class="form-group input-group">
-                <input type="text" step="any" id="location" placeholder="Location" name="location" class="form-control" data-error="Location is missing" required/>
-                     <div class="help-block with-errors"></div>
-            </div>
+          <div class="form-group input-group">
+            <input type="text" step="any" id="location" placeholder="Location" name="location" class="form-control" data-error="Location is missing"
+              required/>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            
-             <div class="form-group">
-                <input type="date" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date" data-error="date" required>
-                <div class="help-block with-errors"></div>
-            </div>
-            
-            <label class="info-label disabled">Provide 0 if this is a free Event (Any other price will be charged) </label>
-            <div class="form-group input-group">
-              
-                <span class="input-group-addon">$</span>
-                <input type="number" step="any" id="ticketPrice" placeholder="Ticket Price" name="ticketPrice" class="form-control" data-error="Ticket price is missing" required/>
-                     <div class="help-block with-errors"></div>
-            </div>
 
-            <div class="form-group">
-                <input type="text" id="contactName" name="contactName" placeholder="Contact Name" class="form-control" required>
-                <div class="help-block with-errors"></div>
-            </div>
+          <div class="form-group">
+            <input type="date" id="eventDate" name="eventDate" class="form-control" placeholder="Event Date" data-error="date" required>
+            <div class="help-block with-errors"></div>
+          </div>
 
-            <div class="form-group">
-                <input type="number" id="contactPhone" name="contactPhone" placeholder="Contact Phone Number" class="form-control" required>
-                <div class="help-block with-errors"></div>
-            </div>
-            
-            <div class="form-group">
-                <input type="text" id="contactEmail" name="contactEmail" placeholder="Email address for contact" class="form-control" required>
-                <div class="help-block with-errors"></div>
-            </div>
-            <div class="form-check">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="rsvp" id="rsvpYes" value="yes">
-                Need RSVP? 
-              </label>
-            </div>
-            <div class="form-check">
-              <label class="info-label disabled">All the other department students will not have access to register</label>
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" name="departmentRestriction" id="departmentRestriction" value="yes">
-                Restrict to the {{{ user.department }}} department only? 
-              </label>
-            </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary">Save changes</button> 
-            </div>
-             
+          <label class="info-label disabled">Provide 0 if this is a free Event (Any other price will be charged) </label>
+          <div class="form-group input-group">
+
+            <span class="input-group-addon">$</span>
+            <input type="number" step="any" id="ticketPrice" placeholder="Ticket Price" name="ticketPrice" class="form-control" data-error="Ticket price is missing"
+              required/>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" id="contactName" name="contactName" placeholder="Contact Name" class="form-control" required>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <input type="number" id="contactPhone" name="contactPhone" placeholder="Contact Phone Number" class="form-control" required>
+            <div class="help-block with-errors"></div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" id="contactEmail" name="contactEmail" placeholder="Email address for contact" class="form-control" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="rsvp" id="rsvpYes" value="yes"> Need RSVP?
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="info-label disabled">All the other department students will not have access to register</label>
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" name="departmentRestriction" id="departmentRestriction" value="yes"> Restrict to the {{{ user.department }}} department only?
+            </label>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>   
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
