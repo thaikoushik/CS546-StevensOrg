@@ -34,7 +34,6 @@ router.get('/eventdetail/:id', async(req, res) => {
         res.render('categories/eventDetail', { user: req.user, event: event });
     } catch (e) {
         res.send(e);
-        console.log(e);
     }
 
 });
@@ -49,10 +48,9 @@ router.post('/registerEvent/:id',  async(req, res) => {
         if (!eventsList) {
             throw "There is no event created with this id";
         }
-        res.statusStatus(200);
+        res.sendStatus(200);
     } catch (e) {
         res.send(e);
-        console.log(e);
     }
 
 });

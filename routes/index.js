@@ -8,7 +8,6 @@ const constructorMethod = (app) => {
   app.use("/event", eventRoutes);
 
     app.use("*", (req, res) => {
-        //app.use("/", userRoutes);
         res.status(404);
     })
 };

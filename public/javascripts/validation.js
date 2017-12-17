@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var dtToday = new Date();
 
     var month = dtToday.getMonth() + 1;
@@ -10,14 +10,14 @@ $(document).ready(function() {
         day = '0' + day.toString();
 
     var maxDate = year + '-' + month + '-' + day;
-    
+
     $('#eventDate').attr('min', maxDate);
 
-    $('#list').click(function(event) {
+    $('#list').click(function (event) {
         event.preventDefault();
         $('#products .item').addClass('list-group-item');
     });
-    $('#grid').click(function(event) {
+    $('#grid').click(function (event) {
         event.preventDefault();
         $('#products .item').removeClass('list-group-item');
         $('#products .item').addClass('grid-group-item');
@@ -30,13 +30,20 @@ function registerEvent(id) {
     $.ajax({
         type: "POST",
         url: '/event/registerEvent/' + eventId,
-        beforeSend: function() {
+        beforeSend: function () {
             $('#registerForEvent').html("<img src='/images/loading.gif' />");
         },
-        success: function(data) {
+        success: function (data) {
             $('#registerForEvent').val("Registered");
             $('#registerForEvent').attr("disabled", "disabled");
         }
+    });
+}
+
+function displayDeptWiseEvent(dept) {
+    var eventDept = dept;
+    $.get('/user/private/' + eventDept, (response) => {
+        $("body").html(response);
     });
 }
 
@@ -59,7 +66,7 @@ function registerEventAfterPay(id) {
 
             $('#charge-error').text(response.error.message);
             $('#charge-error').removeClass('hidden');
-            $form.find('button').prop('disabled', false); 
+            $form.find('button').prop('disabled', false);
 
         } else {
             var token = response.id;

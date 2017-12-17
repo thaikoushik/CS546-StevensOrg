@@ -4,13 +4,13 @@ const uuid = require("node-uuid");
 
 
 const exportedMethods = {
-    
+
     async createUser(newUser) {
         try {
             if (!newUser) throw "User object is empty";
             const userCollections = await users();
             const user = await userCollections.insertOne(newUser);
-            //if (!user) throw "No user found";
+
             return user;
         } catch (e) {
             return e;
@@ -22,7 +22,6 @@ const exportedMethods = {
             if (!username) throw "No username Provided";
             const userCollections = await users();
             const user = await userCollections.findOne({ username: username });
-           // if (!user) throw "No user found";
             return user;
         } catch (e) {
             return e;
@@ -34,12 +33,58 @@ const exportedMethods = {
             if (!id) throw "No id Provided";
             const userCollections = await users();
             const user = await userCollections.findOne({ _id: id });
-            //if (!user) throw "No user found";
             return user;
         } catch (e) {
             return e;
         }
     },
+
+    async getAllTicketDetails(id) {
+        try {
+            if (!id) throw "No id Provided";
+            const userCollections = await users();
+            const user = await userCollections.findOne({ _id: id });
+            return user.events;
+
+        } catch (e) {
+            return e;
+        }
+    },
+
+    async updateUser(id, updateExistingUser) {
+        try {
+
+            const userCollections = await users();
+
+            await userCollections.update({
+                _id: id
+            }, {
+                    $set: {
+
+                        username: updateExistingUser.email,
+
+
+                        firstname: updateExistingUser.firstname,
+
+                        lastname: updateExistingUser.lastname,
+
+
+                        address: updateExistingUser.address,
+
+
+                        phone: updateExistingUser.phone,
+
+
+                        department: updateExistingUser.department,
+                    }
+                });
+            const userDetails = await userData.findUserById(id);
+            return userDetails;
+
+        } catch (e) {
+            return e;
+        }
+    }
 
 }
 
