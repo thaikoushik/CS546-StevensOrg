@@ -75,7 +75,7 @@ app.get('/', function(req, res){
 app.use(function(req,res,next){
     res.locals.login = req.isAuthenticated();
     if(req.isAuthenticated()){
-        if(req.user.role === 'admin'){
+        if((req.user.role === 'admin') || (req.user.role === 'Admin')){
             res.locals.admin = true;
         } else {
             res.locals.admin = false;

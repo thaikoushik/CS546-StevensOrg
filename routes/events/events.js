@@ -29,6 +29,15 @@ router.get('/eventdetail/:id', async(req, res) => {
         } else {
             res.app.locals.payableEvent = false;
         }
+
+        if(event.restrictDeparment && req.user){
+            if(event.department === req.user.department){
+                res.app.locals.restrict = false;
+            } else {
+                res.app.locals.restrict = true;
+            }
+
+        }
         event.imageURL = event.imageURL.replace('.jpg', "");
 
         res.render('categories/eventDetail', { user: req.user, event: event });
@@ -113,7 +122,7 @@ router.get('/getRegisteredUsers/:id', async(req, res) => {
             });
         }
 
-        let tempFilePath = 'E:\\Study\\SEM 3\\Web Programming 1\\Project\\stevensorg\\uploaded\\some.xlsx';
+        let tempFilePath = 'F:\\stevens\\CS 546-WS\\stevensOrgMaster\\CS546-StevensOrg-master\\public\\uploaded\\files\\some.xlsx';
         workbook.xlsx.writeFile(tempFilePath).then(function() {
             res.download(tempFilePath);
         });

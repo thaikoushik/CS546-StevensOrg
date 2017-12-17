@@ -107,7 +107,20 @@ p {
 .description{
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.5em;
+    height: 3em;
 
+}
+
+.event-header3{
+    height: 1em;
+    line-height: 1em;
+    overflow: hidden;
+}
+
+.img-admin-home{
+    height: 215px;
+    width: 215px;
 }
 
 .credit-card-box .panel-title {

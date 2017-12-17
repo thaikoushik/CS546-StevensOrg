@@ -4,35 +4,6 @@
 	<title></title>
 </head>
 <body>
-<div class="w3-content w3-display-container">
-  <img class="mySlides" src="https://www.stevens.edu/sites/stevens_edu/files/footer_main_image.jpeg" style="width:100%">
-  <img class="mySlides" src="https://media.glassdoor.com/l/6e/c2/75/61/babbio-building.jpg" style="width:100%">
-  <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ350C1IuEKNoReZAnmzLT_znNyCS0Wbx8Ql0xyAAgRZR0Z6YdH" style="width:100%">
-  <img class="mySlides" src="http://personal.stevens.edu/~cchoi/MEMS-Nano/index_files/image005.jpg" style="width:100%">
-
-  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-</div>
+This is Home page
 </body>
 </html>
-
-<script type="text/javascript">
-	
-	var slideIndex = 1;
-showDivs(slideIndex);
-
-function plusDivs(n) {
-  showDivs(slideIndex += n);
-}
-
-function showDivs(n) {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = x.length}
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";  
-  }
-  x[slideIndex-1].style.display = "block";  
-}
-</script>

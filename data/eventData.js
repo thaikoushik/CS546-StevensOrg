@@ -141,7 +141,7 @@ const exportedMethods = {
             }
 
             // Updating user table
-            const userCollectionsUpdated = await userCollections.update({ _id: eventDetails._id }, {
+            const userCollectionsUpdated = await userCollections.update({ _id: userId }, {
                 $addToSet: {
                     events: eventRegistered
                 }
@@ -149,8 +149,8 @@ const exportedMethods = {
 
             // Updating Event Table
 
-            await eventCollections.update({ _id: userId }, {
-                $Set: {
+            await eventCollections.update({ _id: eventDetails._id }, {
+                $set: {
                     availableTickets: eventDetails.availableTickets - 1
                 }
             });
@@ -186,7 +186,7 @@ const exportedMethods = {
                 throw "No id Provided";
             }
             const userCollections = await users();
-            const registeredUsers = await userCollections.find({ "events": { $elemMatch: { eventId: "e3079314-e7a8-4f8a-8247-535d98cec627" } } }).toArray();
+            const registeredUsers = await userCollections.find({ "events": { $elemMatch: { eventId: id } } }).toArray();
             return registeredUsers;
         } catch (e) {
             return e;
