@@ -9,12 +9,11 @@ CONTENTS OF THIS FILE
  
 1. Introduction: This is the Event organisation website for the Stevens. Admin can create events and Students can register for the events.
 
-2. Requirements:	Installed Node.js, Mongodb and Google Chrome or any other website.
+2. Requirements:	Installed Node.js, Mongodb and Google Chrome or any other browser.
 	
 3. Installation:  
 	3.a Download the code from - https://github.com/thaikoushik/CS546-StevensOrg.
 	3.b Start the mongodb server
-	3.c 
 	3.c Run npm install to install all the dependencies in your local machine.
 	3.d Run npm start  
 
@@ -22,7 +21,7 @@ CONTENTS OF THIS FILE
 	4.a Temporary - Changing the tempFilePath in the routes/events.js - to any local file path of your choice. (This is a temporary work around).
 	4.b Updating the user role to Admin from Mongodb. This is a temporary work around for the changing the user role.
 	
-5. Files : group10.mp4 - Demo Video
+5. Files : group10.mp4 - Application Demo Video
 	   group10DBdump.archive - Database Dump.
 	   ReadMe.txt - Instructions to compile and run the application
 	   Rest of the files comprise the code.
